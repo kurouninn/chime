@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chime", "chime\chime.vcxproj", "{20FD7084-FB81-40DE-B2CB-E858950215CC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{20FD7084-FB81-40DE-B2CB-E858950215CC}.Debug|ARM.ActiveCfg = Debug|ARM
+		{20FD7084-FB81-40DE-B2CB-E858950215CC}.Debug|ARM.Build.0 = Debug|ARM
+		{20FD7084-FB81-40DE-B2CB-E858950215CC}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{20FD7084-FB81-40DE-B2CB-E858950215CC}.Debug|ARM64.Build.0 = Debug|ARM64
+		{20FD7084-FB81-40DE-B2CB-E858950215CC}.Release|ARM.ActiveCfg = Release|ARM
+		{20FD7084-FB81-40DE-B2CB-E858950215CC}.Release|ARM.Build.0 = Release|ARM
+		{20FD7084-FB81-40DE-B2CB-E858950215CC}.Release|ARM64.ActiveCfg = Release|ARM64
+		{20FD7084-FB81-40DE-B2CB-E858950215CC}.Release|ARM64.Build.0 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B2E89A5A-B036-484A-9CEC-0BB74E484F5E}
+	EndGlobalSection
+EndGlobal
