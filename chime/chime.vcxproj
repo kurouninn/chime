@@ -51,8 +51,9 @@
       <LibraryDependencies>wiringPi</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>gpio export 17 out</Command>
-      <Message>export pin 17 using the gpio utility so that we can execute the blink program without sudo</Message>
+      <Command>cp bin/ARM/Debug/chime.out ./</Command>
+      <Message>
+      </Message>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -60,14 +61,21 @@
       <LibraryDependencies>wiringPi</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>gpio export 17 out</Command>
-      <Message>export pin 17 using the gpio utility so that we can execute the blink program without sudo</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Media Include="music\nc2.wav" />
+    <Media Include="music\none.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="chime.conf" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
