@@ -61,8 +61,7 @@
       <LibraryDependencies>wiringPi</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>
-      </Command>
+      <Command>cp bin/ARM/Debug/chime.out ./</Command>
       <Message>
       </Message>
     </RemotePostBuildEvent>
@@ -71,7 +70,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="music\nc2.wav" />
+    <Media Include="music\001.wav" />
+    <Media Include="music\002.wav" />
+    <Media Include="music\003.wav" />
+    <Media Include="music\004.wav" />
+    <Media Include="music\005.wav" />
     <Media Include="music\none.wav" />
   </ItemGroup>
   <ItemGroup>

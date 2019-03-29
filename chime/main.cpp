@@ -12,6 +12,7 @@
 #include <strings.h>
 #include <string>
 #include <deque>
+#include <vector>
 
 #include <sys/epoll.h>
 #include <pthread.h>
@@ -33,7 +34,7 @@ void abrt_handler(int sig, siginfo_t *info, void *ctx);
 #define MUSIC "music"
 #define MUSIC_NONE "music_none"
 
-#define WATCHDOG 300000 //ms
+#define WATCHDOG 180000 //ms
 
 #define GPIO_PIN "17"
 
@@ -47,13 +48,16 @@ void abrt_handler(int sig, siginfo_t *info, void *ctx);
 
 
 std::string path;
-std::deque<std::string> musics;
+std::string none;
+std::vector<std::string> musics;
 
 int epfd = -1;
+int gvfd = -1;
 bool gpiosetup = false;
 volatile bool loop = true;
 void release();
 int gpioinit();
+void random_shuffle(std::vector<int> &no);
 
 
 int main(int argc, char *argv[])
@@ -91,35 +95,61 @@ int main(int argc, char *argv[])
 	}
 	
 	epoll_event ee = { 0 };
-	
-	for (unsigned int i = 1; loop;) {
-		if ((ret = epoll_wait(epfd, &ee, 1, WATCHDOG)) == 0) {
-			system(("aplay " + path + musics[0]).c_str());
-		}
-		else if(ret > 0){
-			system(("aplay " + path + musics[i]).c_str());
-			printf(("play " + path + musics[i] + "\n").c_str());
 
-			if (musics.size() <= ++i)
-				i = 1;
+	std::vector<int> no;
+	int musiccount = (int)musics.size();
+	no.resize(musiccount);
+
+	for (int i = 0; i < musiccount; i++) {
+		no[i] = i;
+	}
+
+	random_shuffle(no);
+	//for (int i = 0; i < musiccount; i++) {
+	//	printf("%d ", no[i]);
+	//}
+	//printf("\n");
+
+	for (int i = 0; i < musiccount; i++) {
+		printf((path + musics[i] + "\n").c_str());
+	}
+
+	for (int i = 0; loop;) {
+		if ((ret = epoll_wait(epfd, &ee, 1, WATCHDOG)) == 0) {
+			system(("aplay -q " + path + none).c_str());
+		} else if(ret > 0){
+			system(("aplay -q " + path + musics[no[i++]]).c_str());
+//			printf(("aplay " + path + musics[no[i++]] + "\n").c_str());
+
+			if (i >= musiccount) {
+				i = 0;
+				random_shuffle(no);
+				//for (int h = 0; h < musiccount; h++) {
+				//	printf("%d ", no[h]);
+				//}
+				//printf("\n");
+			}
 			epoll_wait(epfd, &ee, 1, 0);
 		}else
 			printf("play epoll_wait error\n");
-
 	}
-
-	//while (true) {
-	//	if (epoll_wait(epfd, &ee, 1, WATCHDOG) == 0) {
-	//		printf("watchdog\n");
-	//	}
-	//	else {
-	//		for (int i = 1; i < musics.size(); i++)
-	//			printf(("play " + musics[i] + "\n").c_str());
-	//	}
-	//}
 
 	release();
 	return 0;
+}
+
+void random_shuffle(std::vector<int> &no)
+{
+	int size = no.size();
+	int a, b;
+	size_t i;
+	srand((unsigned)time(NULL));
+
+	for (i = size; i > 1; --i) {
+		a = i - 1;
+		b = rand() % i;
+		std::swap(no[a], no[b]);
+	}
 }
 
 void release()
@@ -128,6 +158,11 @@ void release()
 	if (!(epfd < 0)) {
 		close(epfd);
 		epfd = -1;
+	}
+
+	if (gvfd != -1) {
+		close(gvfd);
+		gvfd = -1;
 	}
 
 	if (gpiosetup) {
@@ -151,22 +186,25 @@ int readconf(const char *name)
 	if (f == nullptr)
 		return -1;
 
-	//printf(" %s open \n", name);
+//	printf(" %s open \n", name);
 
 	while ( (ret = fgets(s, LINESIZE, f)) != nullptr) {
 		if (s[0] == '#')
 			continue;
 
-		sscanf(s, " %[^= ] = %s%*[^\n]", key, value);
+		if (sscanf(s, " %[^= ] = %s%*[^\n]", key, value) > 0) {
+//			printf("key = %s, value = %s\n", key, value);
 
-		//printf("key = %s, value = %s\n", key, value);
-
-		if (strcasecmp(key, MUSIC) == 0) {
-			musics.push_back(value);
-		}else if (strcasecmp(key, MUSIC_NONE) == 0) {
-			musics.push_front(value);
-		}else if (strcasecmp(key, PATH) == 0) {
-			path = value;
+			if (strcasecmp(key, MUSIC) == 0) {
+				musics.push_back(value);
+			}
+			else if (strcasecmp(key, MUSIC_NONE) == 0) {
+				none = value;
+			}
+			else if (strcasecmp(key, PATH) == 0) {
+				path = value;
+			}
+			key[0] = value[0] = '\0';
 		}
 	}
 
@@ -204,7 +242,7 @@ int gpioinit()
 //	write(fd, "both", 4);
 	close(fd);
 
-	if ((fd = open(GPIO_VALUE, O_RDONLY)) == -1) {
+	if ((gvfd = open(GPIO_VALUE, O_RDONLY | O_NONBLOCK)) == -1) {
 		return -4;
 	}
 

@@ -9,10 +9,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="music\nc2.wav">
+    <Media Include="music\none.wav">
       <Filter>music</Filter>
     </Media>
-    <Media Include="music\none.wav">
+    <Media Include="music\001.wav">
+      <Filter>music</Filter>
+    </Media>
+    <Media Include="music\002.wav">
+      <Filter>music</Filter>
+    </Media>
+    <Media Include="music\003.wav">
+      <Filter>music</Filter>
+    </Media>
+    <Media Include="music\004.wav">
+      <Filter>music</Filter>
+    </Media>
+    <Media Include="music\005.wav">
       <Filter>music</Filter>
     </Media>
   </ItemGroup>
