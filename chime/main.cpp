@@ -117,21 +117,24 @@ int main(int argc, char *argv[])
 	for (int i = 0; loop;) {
 		if ((ret = epoll_wait(epfd, &ee, 1, WATCHDOG)) == 0) {
 			system(("aplay -q " + path + none).c_str());
-		} else if(ret > 0){
-			system(("aplay -q " + path + musics[no[i++]]).c_str());
-//			printf(("aplay " + path + musics[no[i++]] + "\n").c_str());
+		} else if(ret > 0 && (ee.events & EPOLLIN)){
+			lseek(gvfd, 0, SEEK_SET);
+			char c = 0;
+			int n = read(gvfd, &c, 1);
+
+			if (c == '1') {
+				system(("aplay -q " + path + musics[no[i++]]).c_str());
+			} else if (c == '0') {
+
+			}
 
 			if (i >= musiccount) {
 				i = 0;
-				random_shuffle(no);
-				//for (int h = 0; h < musiccount; h++) {
-				//	printf("%d ", no[h]);
-				//}
-				//printf("\n");
+				random_shuffle(no); 
 			}
 			epoll_wait(epfd, &ee, 1, 0);
 		}else
-			printf("play epoll_wait error\n");
+			printf("play epoll_wait error %d\n",ee.events);
 	}
 
 	release();
@@ -247,7 +250,7 @@ int gpioinit()
 	}
 
 	epoll_event ee = { 0 };
-	ee.events = EPOLLET;
+	ee.events = EPOLLET | EPOLLIN;
 
 	if (epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ee) != 0) {
 		return -5;
