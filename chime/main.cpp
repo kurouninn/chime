@@ -122,17 +122,17 @@ int main(int argc, char *argv[])
 			char c = 0;
 			int n = read(gvfd, &c, 1);
 
-			if (c == '1') {
+			if (n > 0 && c == '1') {
 				system(("aplay -q " + path + musics[no[i++]]).c_str());
-			} else if (c == '0') {
+				if (i >= musiccount) {
+					i = 0;
+					random_shuffle(no); 
+				}
+			} else if (n > 0 && c == '0') {
 
 			}
 
-			if (i >= musiccount) {
-				i = 0;
-				random_shuffle(no); 
-			}
-			epoll_wait(epfd, &ee, 1, 0);
+//			epoll_wait(epfd, &ee, 1, 0);
 		}else
 			printf("play epoll_wait error %d\n",ee.events);
 	}
