@@ -36,6 +36,15 @@
     <Media Include="music\008.wav">
       <Filter>music</Filter>
     </Media>
+    <Media Include="music\009.wav">
+      <Filter>music</Filter>
+    </Media>
+    <Media Include="music\010.wav">
+      <Filter>music</Filter>
+    </Media>
+    <Media Include="music\011.wav">
+      <Filter>music</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
     <None Include="chime.conf" />

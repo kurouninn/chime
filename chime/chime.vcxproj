@@ -78,6 +78,9 @@
     <Media Include="music\006.wav" />
     <Media Include="music\007.wav" />
     <Media Include="music\008.wav" />
+    <Media Include="music\009.wav" />
+    <Media Include="music\010.wav" />
+    <Media Include="music\011.wav" />
     <Media Include="music\none.wav" />
   </ItemGroup>
   <ItemGroup>
